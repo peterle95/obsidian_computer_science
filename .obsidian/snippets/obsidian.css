@@ -1,0 +1,155 @@
+/* Calm Neon Blue Theme */
+.theme-light, .theme-dark {
+  /* Primary colors */
+  --background-primary: #0a0f1c;
+  --background-primary-alt: #0d1421;
+  --background-secondary: #111827;
+  --background-secondary-alt: #151e2e;
+  --background-modifier-border: #1e3a5f;
+  --background-modifier-form-field: #0f1419;
+  --background-modifier-form-field-highlighted: #1a2332;
+  --background-modifier-box-shadow: rgba(0, 0, 0, 0.3);
+  --background-modifier-success: #059669;
+  --background-modifier-error: #dc2626;
+  --background-modifier-error-rgb: 220, 38, 38;
+  --background-modifier-error-hover: #991b1b;
+  --background-modifier-cover: rgba(0, 0, 0, 0.6);
+  
+  /* Text colors */
+  --text-normal: #8dd5f0;
+  --text-muted: #64a8cc;
+  --text-accent: #4dd0e1;
+  --text-accent-hover: #26c6da;
+  --text-faint: #4a7c95;
+  --text-error: #f87171;
+  --text-error-hover: #ef4444;
+  --text-highlight-bg: rgba(77, 208, 225, 0.2);
+  --text-highlight-bg-active: rgba(77, 208, 225, 0.3);
+  --text-selection: rgba(77, 208, 225, 0.3);
+  
+  /* Interactive elements */
+  --interactive-normal: #1e3a5f;
+  --interactive-hover: #2d4f73;
+  --interactive-accent: #4dd0e1;
+  --interactive-accent-hover: #26c6da;
+  --interactive-success: #10b981;
+  
+  /* Scrollbars */
+  --scrollbar-bg: rgba(77, 208, 225, 0.1);
+  --scrollbar-thumb-bg: rgba(77, 208, 225, 0.3);
+  --scrollbar-active-thumb-bg: rgba(77, 208, 225, 0.5);
+  
+  /* Borders and dividers */
+  --border-color: #1e3a5f;
+  --divider-color: #2d4f73;
+  
+  /* Headers */
+  --h1-color: #4dd0e1;
+  --h2-color: #64b5f6;
+  --h3-color: #81c784;
+  --h4-color: #ffb74d;
+  --h5-color: #f06292;
+  --h6-color: #ba68c8;
+  
+  /* Links */
+  --link-color: #4dd0e1;
+  --link-color-hover: #26c6da;
+  --link-unresolved-color: #64a8cc;
+  --link-unresolved-opacity: 0.7;
+  
+  /* Code */
+  --code-background: #0f1419;
+  --code-normal: #7dd3fc;
+  --code-comment: #4a7c95;
+  --code-keyword: #4dd0e1;
+  --code-string: #81c784;
+  --code-function: #ffb74d;
+  --code-important: #f06292;
+  --code-operator: #ba68c8;
+  
+  /* Tags */
+  --tag-color: #4dd0e1;
+  --tag-background: rgba(77, 208, 225, 0.1);
+  --tag-background-hover: rgba(77, 208, 225, 0.2);
+  
+  /* Tables */
+  --table-header-background: #1e3a5f;
+  --table-row-even-background: rgba(77, 208, 225, 0.05);
+  --table-row-odd-background: transparent;
+  --table-row-hover-background: rgba(77, 208, 225, 0.1);
+}
+
+/* Additional styling for specific elements */
+.markdown-source-view .cm-header-1 { color: var(--h1-color); }
+.markdown-source-view .cm-header-2 { color: var(--h2-color); }
+.markdown-source-view .cm-header-3 { color: var(--h3-color); }
+.markdown-source-view .cm-header-4 { color: var(--h4-color); }
+.markdown-source-view .cm-header-5 { color: var(--h5-color); }
+.markdown-source-view .cm-header-6 { color: var(--h6-color); }
+
+/* Enhance the neon glow effect */
+.markdown-source-view .cm-link,
+.markdown-preview-view a {
+  color: var(--link-color);
+  text-shadow: 0 0 5px rgba(77, 208, 225, 0.5);
+}
+
+.markdown-source-view .cm-link:hover,
+.markdown-preview-view a:hover {
+  color: var(--link-color-hover);
+  text-shadow: 0 0 8px rgba(38, 198, 218, 0.7);
+}
+
+/* Subtle glow for headers */
+.markdown-preview-view h1,
+.markdown-preview-view h2,
+.markdown-preview-view h3 {
+  text-shadow: 0 0 3px rgba(77, 208, 225, 0.3);
+}
+
+/* File explorer styling */
+.nav-file-title,
+.nav-folder-title {
+  color: var(--text-normal);
+}
+
+.nav-file-title:hover,
+.nav-folder-title:hover {
+  color: var(--text-accent);
+  text-shadow: 0 0 3px rgba(77, 208, 225, 0.4);
+}
+
+/* Active file highlight */
+.nav-file-title.is-active {
+  color: var(--text-accent);
+  background-color: rgba(77, 208, 225, 0.1);
+  text-shadow: 0 0 5px rgba(77, 208, 225, 0.3);
+}
+
+/* Search highlights */
+.search-result-file-match-highlight {
+  background-color: rgba(77, 208, 225, 0.3);
+  color: var(--text-normal);
+}
+
+/* Blockquotes */
+.markdown-preview-view blockquote {
+  border-left: 4px solid var(--text-accent);
+  background-color: rgba(77, 208, 225, 0.05);
+}
+
+/* Tags styling */
+.tag {
+  background-color: var(--tag-background);
+  color: var(--tag-color);
+  border: 1px solid rgba(77, 208, 225, 0.3);
+}
+
+.tag:hover {
+  background-color: var(--tag-background-hover);
+  box-shadow: 0 0 5px rgba(77, 208, 225, 0.3);
+}
+
+.vertical-tab-header-group-title {
+  color: var(--color-accent);
+}

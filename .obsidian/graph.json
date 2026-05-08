@@ -1,0 +1,79 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": true,
+  "colorGroups": [
+    {
+      "query": "path:\"Computer Science/C++\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 14701138
+      }
+    },
+    {
+      "query": "path:\"Computer Science/React\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 5429216
+      }
+    },
+    {
+      "query": "path:\"Computer Science/JavaScript\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 11657298
+      }
+    },
+    {
+      "query": "path:\"Computer Science/Docker\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 2440164
+      }
+    },
+    {
+      "query": "path:\"Computer Science/Core Concepts\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 7925760
+      }
+    },
+    {
+      "query": "path:\"Computer Science/Linux\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 6428908
+      }
+    },
+    {
+      "query": "path:\"Computer Science/Leetcode\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 1395782
+      }
+    },
+    {
+      "query": "path:\"Computer Science/InnoBee\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 16574467
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": false,
+  "centerStrength": 0.53125,
+  "repelStrength": 17.3958333333333,
+  "linkStrength": 1,
+  "linkDistance": 500,
+  "scale": 0.12398483283455213,
+  "close": true
+}

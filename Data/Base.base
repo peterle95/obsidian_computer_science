@@ -1,0 +1,22 @@
+views:
+  - type: table
+    name: Table
+    filters:
+      and:
+        - scheda == "to_finish"
+    order:
+      - file.name
+      - file.ctime
+      - visit-count
+      - tags
+      - language
+    sort: []
+    columnSize:
+      file.ctime: 179
+  - type: table
+    name: View
+    filters:
+      and:
+        - file.inFolder("Computer Science/React")
+    imageFit: ""
+    imageAspectRatio: 1.2

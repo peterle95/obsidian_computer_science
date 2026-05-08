@@ -1,0 +1,275 @@
+/* Sidebar folder styling with soft blue gradient */
+.nav-folder-title {
+  transition: background 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  border-radius: 6px;
+  padding: 4px 8px 4px 16px !important;
+  margin: 2px 0;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box !important;
+}
+
+.nav-folder-title:hover {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  filter: brightness(1.1);
+}
+
+/* AI Generated Exercises - Very Light Blue */
+.nav-folder-title[data-path*="AI Generated Exercises"] {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  color: #0c4a6e;
+  border-left: 4px solid #7dd3fc;
+}
+
+.nav-folder-title[data-path*="AI Generated Exercises"]:hover {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  box-shadow: 0 0 20px rgba(125, 211, 252, 0.3);
+}
+
+/* Assets - Light Sky Blue */
+.nav-folder-title[data-path*="Assets"] {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  color: #0369a1;
+  border-left: 4px solid #38bdf8;
+}
+
+.nav-folder-title[data-path*="Assets"]:hover {
+  background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+}
+
+/* Computer Science - Sky Blue */
+.nav-folder-title[data-path*="Computer Science"] {
+  background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
+  color: #0284c7;
+  border-left: 4px solid #0ea5e9;
+}
+
+.nav-folder-title[data-path*="Computer Science"]:hover {
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+}
+
+/* Data - Medium Blue */
+.nav-folder-title[data-path*="Data"] {
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  color: #0369a1;
+  border-left: 4px solid #0ea5e9;
+}
+
+.nav-folder-title[data-path*="Data"]:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+}
+
+/* Sub-folders under Data - Gradual light to darker blue progression */
+.nav-folder-title[data-path*="All files"] {
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  color: #0c4a6e;
+  border-left: 4px solid #0284c7;
+}
+
+.nav-folder-title[data-path*="Confidence"] {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  color: #f0f9ff;
+  border-left: 4px solid #0369a1;
+}
+
+.nav-folder-title[data-path*="Files to Finish"] {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #f0f9ff;
+  border-left: 4px solid #075985;
+}
+
+.nav-folder-title[data-path*="Last Time Reviewed"] {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  color: #f0f9ff;
+  border-left: 4px solid #0c4a6e;
+}
+
+.nav-folder-title[data-path*="Learn"] {
+  background: linear-gradient(135deg, #075985 0%, #0c4a6e 100%);
+  color: #f0f9ff;
+  border-left: 4px solid #1e3a8a;
+}
+
+.nav-folder-title[data-path*="Review Date"] {
+  background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
+  color: #f0f9ff;
+  border-left: 4px solid #1d4ed8;
+}
+
+.nav-folder-title[data-path*="Reviewed Today"] {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+  color: #f0f9ff;
+  border-left: 4px solid #2563eb;
+}
+
+/* Things to do - Very Light Cyan */
+.nav-folder-title[data-path*="Things to do"] {
+  background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+  color: #155e75;
+  border-left: 4px solid #67e8f9;
+}
+
+.nav-folder-title[data-path*="Things to do"]:hover {
+  background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%);
+  box-shadow: 0 0 20px rgba(103, 232, 249, 0.2);
+}
+
+/* File titles styling - subtle blue tint */
+.nav-file-title {
+  transition: background 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  border-radius: 4px;
+  padding: 2px 6px 2px 14px !important;
+  margin: 1px 0;
+  color: #e5e7eb;
+  box-sizing: border-box !important;
+}
+
+.nav-file-title:hover {
+  background: linear-gradient(135deg, rgba(125, 211, 252, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+  color: #f0f9ff;
+  box-shadow: 0 0 10px rgba(125, 211, 252, 0.1);
+  filter: brightness(1.1);
+}
+
+.nav-file-title.is-active {
+  background: linear-gradient(135deg, rgba(125, 211, 252, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%);
+  color: #f0f9ff;
+  border-left: 3px solid #7dd3fc;
+  box-shadow: 0 0 15px rgba(125, 211, 252, 0.2);
+  padding: 2px 6px 2px 14px !important;
+}
+
+/* Folder collapse/expand icons */
+.nav-folder-collapse-indicator {
+  color: #d1d5db;
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+.nav-folder-collapse-indicator:hover {
+  color: #f0f9ff;
+  filter: brightness(1.2);
+}
+
+/* Override Obsidian's default indentation completely */
+.nav-folder-children {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Use custom indentation that won't shift */
+.nav-folder-children .nav-folder-title {
+  padding-left: 28px !important;
+  opacity: 0.95;
+}
+
+.nav-folder-children .nav-file-title {
+  padding-left: 26px !important;
+}
+
+.nav-folder-children .nav-folder-children .nav-folder-title {
+  padding-left: 40px !important;
+  opacity: 0.9;
+}
+
+.nav-folder-children .nav-folder-children .nav-file-title {
+  padding-left: 38px !important;
+}
+
+/* CRITICAL: Override ALL possible active states with maximum specificity */
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title:active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title.is-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title.is-selected,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title.mod-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title.is-being-dragged,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title.is-being-dragged-over,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title:focus,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[aria-selected="true"] {
+  padding: 4px 8px 4px 16px !important;
+  margin-left: 0 !important;
+  transform: none !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title:active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-selected,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.mod-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-being-dragged,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-being-dragged-over,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title:focus,
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title[aria-selected="true"] {
+  padding: 2px 6px 2px 14px !important;
+  margin-left: 0 !important;
+  transform: none !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+}
+
+/* Nested items - maintain their deeper padding in ALL states */
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-title,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-title:active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-title.is-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-title.is-selected,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-title.mod-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-title:focus,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-title[aria-selected="true"] {
+  padding-left: 28px !important;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title:active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title.is-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title.is-selected,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title.mod-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title:focus,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title[aria-selected="true"] {
+  padding-left: 26px !important;
+}
+
+/* Third level nesting */
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-folder-title,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-folder-title:active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-folder-title.is-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-folder-title.is-selected,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-folder-title.mod-active {
+  padding-left: 40px !important;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-file-title,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-file-title:active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-file-title.is-active,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-file-title.is-selected,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-folder-children .nav-file-title.mod-active {
+  padding-left: 38px !important;
+}
+
+/* Smooth scrollbar for sidebar */
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(125, 211, 252, 0.2) transparent;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(125, 211, 252, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%);
+  border-radius: 3px;
+}
+
+/* Add subtle glow to entire sidebar */
+.workspace-leaf-content[data-type="file-explorer"] {
+  background: linear-gradient(180deg, rgba(125, 211, 252, 0.02) 0%, rgba(56, 189, 248, 0.02) 100%);
+  border-right: 1px solid rgba(125, 211, 252, 0.1);
+}

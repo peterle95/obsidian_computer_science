@@ -1,0 +1,11 @@
+{
+  "enabledCssSnippets": [
+    "note",
+    "important",
+    "mastered",
+    "difficult"
+  ],
+  "cssTheme": "Things",
+  "monospaceFontFamily": "Segoe UI",
+  "theme": "system"
+}

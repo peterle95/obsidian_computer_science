@@ -1,0 +1,581 @@
+---
+memory: to_finish
+tags:
+  - to_learn
+language:
+  - JavaScript
+review-date: 2025-11-20
+last-reviewed: 2025-10-24
+scheda: done
+visit-count: 4
+confidence-level: 1
+consecutive-correct: 0
+last-struggle-date: 2025-10-24
+cssclasses:
+---
+
+```dataviewjs
+const currentPage = dv.current();
+let visitCount = currentPage.file.frontmatter["visit-count"] || 0;
+let confidence = currentPage.file.frontmatter["confidence-level"] || 1;
+let streak = currentPage.file.frontmatter["consecutive-correct"] || 0;
+
+const container = this.container.createEl('div');
+container.style.cssText = `
+    background: #2a2a2a; border: 1px solid #404040; border-radius: 6px;
+    padding: 12px; margin: 10px 0; display: inline-block;
+`;
+
+// Status display
+const status = container.createEl('div');
+status.innerHTML = `
+    <strong>Learning Progress</strong><br>
+    Reviews: ${visitCount} | Confidence: ${confidence}/5 | Streak: ${streak}
+`;
+status.style.cssText = 'margin-bottom: 10px; font-size: 13px; color: #cccccc;';
+
+// Quick feedback buttons
+const buttonContainer = container.createEl('div');
+['Got it! ✅', 'Struggled ⚠️', 'Failed ❌'].forEach((label, index) => {
+    const btn = buttonContainer.createEl('button');
+    btn.textContent = label;
+    btn.style.cssText = `
+        margin-right: 8px; padding: 4px 8px; border: none; border-radius: 3px;
+        cursor: pointer; font-size: 11px;
+        background: ${['#28a745', '#ffc107', '#dc3545'][index]};
+        color: ${index === 1 ? '#000' : '#fff'};
+    `;
+    
+    btn.addEventListener('click', async () => {
+        visitCount++;
+        if (index === 0) { // Got it
+            confidence = Math.min(5, confidence + 0.5);
+            streak++;
+        } else { // Struggled or failed
+            confidence = Math.max(1, confidence - 0.5);
+            streak = 0;
+        }
+        
+        const file = app.vault.getAbstractFileByPath(currentPage.file.path);
+        await app.fileManager.processFrontMatter(file, (fm) => {
+            fm["visit-count"] = visitCount;
+            fm["confidence-level"] = confidence;
+            fm["consecutive-correct"] = streak;
+            fm["last-reviewed"] = new Date().toISOString().split('T')[0];
+            if (index > 0) fm["last-struggle-date"] = new Date().toISOString().split('T')[0];
+        });
+        
+        status.innerHTML = `
+            <strong>Learning Progress</strong><br>
+            Reviews: ${visitCount} | Confidence: ${confidence}/5 | Streak: ${streak}
+        `;
+    });
+});
+```
+
+```dataviewjs
+// Get all flashcards from the current note
+const currentPage = dv.current();
+const content = await app.vault.read(app.vault.getAbstractFileByPath(currentPage.file.path));
+
+// Split content into lines
+const lines = content.split('\n');
+let flashcardLines = [];
+let inCodeBlock = false;
+
+// Collect all potential flashcard lines - simplified approach
+for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    // Track code blocks
+    if (line.trim().startsWith('```')) {
+        inCodeBlock = !inCodeBlock;
+        continue;
+    }
+    
+    // Skip everything inside code blocks
+    if (inCodeBlock) continue;
+    
+    // Check if line contains flashcard separator
+    if (line.includes(';;')) {
+        flashcardLines.push(line);
+    }
+}
+
+const filteredLines = flashcardLines.filter(line => {
+    // Only filter out lines that are clearly part of the JavaScript code
+    // Be more specific with patterns to avoid false positives
+    return !(
+        line.trim().startsWith('const ') ||
+        line.trim().startsWith('let ') ||
+        line.trim().startsWith('function ') ||
+        line.trim().startsWith('return ') ||
+        line.trim().startsWith('if (') ||
+        line.trim().startsWith('for (') ||
+        line.trim().startsWith('while (') ||
+        line.includes('dataviewjs') ||
+        line.includes('content.split') ||
+        line.includes('flashcardLines') ||
+        line.includes('this.container') ||
+        line.includes('addEventListener') ||
+        line.includes('console.log') ||
+        /\.\w+\(/.test(line) && (line.includes('.map(') || line.includes('.filter(') || line.includes('.forEach(') || line.includes('.find('))
+    );
+});
+
+// Process the flashcards
+const flashcards = [];
+for (let i = 0; i < filteredLines.length; i++) {
+    const line = filteredLines[i];
+    try {
+        const separatorIndex = line.indexOf(';;');
+        if (separatorIndex === -1) continue;
+        
+        const front = line.substring(0, separatorIndex).trim();
+        const back = line.substring(separatorIndex + 2).trim();
+        
+        // Very minimal validation - just check they exist
+        if (front && back) {
+            flashcards.push({ 
+                front: front, 
+                back: back,
+                index: i // Keep track of original order
+            });
+        }
+    } catch (error) {
+        console.log('Error processing flashcard line:', line, error);
+    }
+}
+
+// Debug information
+console.log('All lines with ;;:', flashcardLines.length);
+console.log('After filtering:', filteredLines.length);
+console.log('Filtered lines:', filteredLines);
+console.log('Final flashcards:', flashcards.length);
+
+if (flashcards.length === 0) {
+    const errorMsg = this.container.createEl('div');
+    errorMsg.style.cssText = 'background: #2a2a2a; padding: 15px; border-radius: 6px; color: #cccccc;';
+    errorMsg.innerHTML = `
+        <strong>No flashcards found!</strong><br><br>
+        Lines with ';;' found: ${flashcardLines.length}<br>
+        After filtering: ${filteredLines.length}<br>
+        Valid flashcards: ${flashcards.length}<br><br>
+        <strong>All lines with ;;:</strong><br>
+        ${flashcardLines.map((line, i) => `${i+1}. ${line.substring(0, 50)}...`).join('<br>')}
+    `;
+    return;
+}
+
+// Flashcard state
+let currentCardIndex = 0;
+let showingBack = false;
+let correctCount = 0;
+let totalReviewed = 0;
+
+// Create main container
+const container = this.container.createEl('div');
+container.style.cssText = `
+    background: #2a2a2a;
+    border: 1px solid #404040;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    max-width: 700px;
+`;
+
+// Header with progress
+const header = container.createEl('div');
+header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;';
+
+const title = header.createEl('h3');
+title.textContent = `Flashcards (${flashcards.length} total)`;
+title.style.cssText = 'margin: 0; color: #ffffff;';
+
+const progress = header.createEl('div');
+progress.style.cssText = 'color: #cccccc; font-size: 14px; text-align: right;';
+
+// Card container
+const cardContainer = container.createEl('div');
+cardContainer.style.cssText = `
+    background: #1a1a1a;
+    border: 2px solid #404040;
+    border-radius: 6px;
+    padding: 30px;
+    margin: 20px 0;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+`;
+
+const cardText = cardContainer.createEl('div');
+cardText.style.cssText = `
+    font-size: 16px;
+    line-height: 1.5;
+    color: #ffffff;
+    word-wrap: break-word;
+    max-width: 100%;
+`;
+
+// Button container
+const buttonContainer = container.createEl('div');
+buttonContainer.style.cssText = 'display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px;';
+
+// Control buttons
+const flipButton = buttonContainer.createEl('button');
+flipButton.textContent = 'Flip Card';
+flipButton.style.cssText = `
+    background: #4a9eff; color: white; border: none; border-radius: 4px;
+    padding: 10px 16px; cursor: pointer; font-size: 14px; font-weight: 500;
+`;
+
+const easyButton = buttonContainer.createEl('button');
+easyButton.textContent = 'Easy ✅';
+easyButton.style.cssText = `
+    background: #28a745; color: white; border: none; border-radius: 4px;
+    padding: 10px 16px; cursor: pointer; font-size: 14px; display: none;
+`;
+
+const hardButton = buttonContainer.createEl('button');
+hardButton.textContent = 'Hard ❌';
+hardButton.style.cssText = `
+    background: #dc3545; color: white; border: none; border-radius: 4px;
+    padding: 10px 16px; cursor: pointer; font-size: 14px; display: none;
+`;
+
+const nextButton = buttonContainer.createEl('button');
+nextButton.textContent = 'Next →';
+nextButton.style.cssText = `
+    background: #6c757d; color: white; border: none; border-radius: 4px;
+    padding: 10px 16px; cursor: pointer; font-size: 14px;
+`;
+
+const prevButton = buttonContainer.createEl('button');
+prevButton.textContent = '← Prev';
+prevButton.style.cssText = `
+    background: #6c757d; color: white; border: none; border-radius: 4px;
+    padding: 10px 16px; cursor: pointer; font-size: 14px;
+`;
+
+const shuffleButton = buttonContainer.createEl('button');
+shuffleButton.textContent = '🔀 Shuffle';
+shuffleButton.style.cssText = `
+    background: #17a2b8; color: white; border: none; border-radius: 4px;
+    padding: 10px 16px; cursor: pointer; font-size: 14px;
+`;
+
+// Functions
+function updateDisplay() {
+    const card = flashcards[currentCardIndex];
+    cardText.textContent = showingBack ? card.back : card.front;
+    
+    progress.innerHTML = `Card ${currentCardIndex + 1} of ${flashcards.length}`;
+    if (totalReviewed > 0) {
+        progress.innerHTML += `<br>Correct: ${correctCount}/${totalReviewed} (${Math.round(correctCount/totalReviewed*100)}%)`;
+    }
+    
+    // Show/hide difficulty buttons
+    if (showingBack) {
+        easyButton.style.display = 'inline-block';
+        hardButton.style.display = 'inline-block';
+        flipButton.textContent = 'Show Front';
+        cardContainer.style.borderColor = '#ffc107';
+        cardContainer.style.backgroundColor = '#252525';
+    } else {
+        easyButton.style.display = 'none';
+        hardButton.style.display = 'none';
+        flipButton.textContent = 'Flip Card';
+        cardContainer.style.borderColor = '#404040';
+        cardContainer.style.backgroundColor = '#1a1a1a';
+    }
+    
+    // Update navigation buttons
+    prevButton.style.display = currentCardIndex > 0 ? 'inline-block' : 'none';
+    nextButton.textContent = currentCardIndex < flashcards.length - 1 ? 'Next →' : 'Restart';
+}
+
+function flipCard() {
+    showingBack = !showingBack;
+    updateDisplay();
+}
+
+function nextCard() {
+    if (currentCardIndex < flashcards.length - 1) {
+        currentCardIndex++;
+    } else {
+        currentCardIndex = 0;
+    }
+    showingBack = false;
+    updateDisplay();
+}
+
+function prevCard() {
+    if (currentCardIndex > 0) {
+        currentCardIndex--;
+        showingBack = false;
+        updateDisplay();
+    }
+}
+
+function markCorrect() {
+    if (showingBack) {
+        correctCount++;
+        totalReviewed++;
+        nextCard();
+    }
+}
+
+function markIncorrect() {
+    if (showingBack) {
+        totalReviewed++;
+        nextCard();
+    }
+}
+
+function shuffleCards() {
+    for (let i = flashcards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+    }
+    currentCardIndex = 0;
+    showingBack = false;
+    correctCount = 0;
+    totalReviewed = 0;
+    updateDisplay();
+}
+
+// Event listeners
+cardContainer.addEventListener('click', flipCard);
+flipButton.addEventListener('click', flipCard);
+easyButton.addEventListener('click', markCorrect);
+hardButton.addEventListener('click', markIncorrect);
+nextButton.addEventListener('click', nextCard);
+prevButton.addEventListener('click', prevCard);
+shuffleButton.addEventListener('click', shuffleCards);
+
+// Instructions
+const instructions = container.createEl('div');
+instructions.style.cssText = 'font-size: 12px; color: #888; text-align: center; line-height: 1.4;';
+instructions.innerHTML = `
+    <strong>Controls:</strong> Click card to flip | Navigation buttons | Easy/Hard to mark
+`;
+
+// Initialize
+updateDisplay();
+```
+
+## Purpose/Why:
+---
+
+Function binding methods (`bind()`, `call()`, `apply()`) are essential JavaScript tools that give ==developers explicit control over two critical aspects of function execution==:
+
+>1. **The execution context** - what `this` refers to inside the function
+>2. **Argument handling** - how parameters are passed to the function
+
+### Why This Matters:
+
+In JavaScript, ==the value of `this` is determined by **how a function is called**, not where it's defined.== This <mark style="background: #ABF7F7A6;">dynamic binding can cause problems</mark> in several scenarios:
+
+- **[[JavaScript Callback Functions]]** <mark style="background: #ADCCFFA6;">lose their original context when passed to other functions</mark>
+- **Event handlers** often have <mark style="background: #ADCCFFA6;">`this` pointing to the DOM element instead of your object</mark>
+- **Method extraction** breaks the connection between a method and its object
+- **Function reuse** across different objects requires context switching
+
+Binding methods ==solve these issues by letting you explicitly set the execution context and pre-configure arguments, making your code more predictable and reusable.==
+
+## Core Explanation:
+---
+### The Three Binding Methods:
+
+**`bind(thisArg, ...args)`**
+
+- **Purpose**: Creates a <mark style="background: #BBFABBA6;">new function with a permanently bound context</mark>
+- **Execution**: Returns a new function (<mark style="background: #BBFABBA6;">does NOT execute immediately</mark>)
+- **Use case**: When you need a reusable function with a specific context
+- **Partial application**: Can pre-fill arguments for later use
+
+**`call(thisArg, ...args)`**
+
+- **Purpose**: <mark style="background: #ABF7F7A6;">Immediately executes a function with a specific context</mark>
+- **Execution**: Runs the function right away
+- **Arguments**: Passed individually <mark style="background: #D2B3FFA6;">as separate parameters</mark>
+- **Use case**: <mark style="background: #ABF7F7A6;">One-time execution with a different context</mark>
+
+**`apply(thisArg, argsArray)`**
+
+- **Purpose**: <mark style="background: #D2B3FFA6;">Immediately executes a function with a specific context</mark>
+- **Execution**: Runs the function right away
+- **Arguments**: <mark style="background: #D2B3FFA6;">Passed as an array or array-like object</mark>
+- **Use case**: <mark style="background: #D2B3FFA6;">When you have arguments in an array format</mark>
+
+### Memory Aid:
+
+>- **bind** → **B**uild a reusable function
+>- **call** → **C**all immediately with individual arguments
+>- **apply** → **A**rray of arguments, execute immediately
+
+## Related Concepts:
+---
+
+- **Arrow Functions**: Lexically bind `this` from enclosing scope (cannot be rebound)
+- **Method Borrowing**: Using methods from one object with another object's data
+- **Partial Application**: Pre-filling function arguments for specialized versions
+- **[[Javascript Lexical Environment]]**: Understanding how `this` is determined in different call patterns
+- **Event Handler Binding**: Maintaining object context in DOM event callbacks
+
+## Examples:
+---
+
+### Basic Context Binding with `bind()`
+
+```javascript
+const company = {
+  name: "TechCorp",
+  employees: ["Alice", "Bob", "Carol"],
+  
+  introduce: function() {
+    console.log(`Welcome to ${this.name}!`);
+  },
+  
+  listEmployees: function() {
+    this.employees.forEach(function(employee) {
+      // Problem: 'this' is undefined here (or window in non-strict mode)
+      console.log(`${employee} works at ${this.name}`);
+    });
+  }
+};
+
+// This breaks because 'this' context is lost
+company.listEmployees(); 
+// Output: "Alice works at undefined"
+
+// Solution: bind the context
+listEmployeesBound: function() {
+  this.employees.forEach(function(employee) {
+    console.log(`${employee} works at ${this.name}`);
+  }.bind(this)); // Bind the outer 'this' to the callback
+}
+```
+
+### Immediate Execution with `call()`
+
+```javascript
+function createProfile(role, department, years) {
+  return `${this.name} is a ${role} in ${department} with ${years} years experience`;
+}
+
+const employee1 = { name: "Sarah" };
+const employee2 = { name: "Mike" };
+
+// call() executes immediately with different contexts
+console.log(createProfile.call(employee1, "Developer", "Engineering", 3));
+// Output: "Sarah is a Developer in Engineering with 3 years experience"
+
+console.log(createProfile.call(employee2, "Designer", "UX", 5));  
+// Output: "Mike is a Designer in UX with 5 years experience"
+```
+
+### Array Arguments with `apply()`
+
+```javascript
+// Finding max value in an array
+const scores = [85, 92, 78, 96, 88];
+
+// Math.max expects individual arguments, not an array
+console.log(Math.max(scores)); // NaN (wrong!)
+
+// apply() spreads the array elements as individual arguments
+console.log(Math.max.apply(null, scores)); // 96
+
+// Modern alternative using spread operator
+console.log(Math.max(...scores)); // 96
+```
+
+### Method Borrowing
+
+```javascript
+const arrayLike = {
+  0: "apple",
+  1: "banana", 
+  2: "orange",
+  length: 3
+};
+
+// Borrow Array methods for array-like objects
+const fruits = Array.prototype.slice.call(arrayLike);
+console.log(fruits); // ["apple", "banana", "orange"]
+
+// Or convert to real array first
+const joined = Array.prototype.join.call(arrayLike, " - ");
+console.log(joined); // "apple - banana - orange"
+```
+
+### Partial Application with `bind()`
+
+```javascript
+function calculateTax(rate, amount) {
+  return amount * (rate / 100);
+}
+
+// Create specialized tax calculators
+const calculateSalesTax = calculateTax.bind(null, 8.5);
+const calculateLuxuryTax = calculateTax.bind(null, 15);
+
+console.log(calculateSalesTax(100)); // 8.5
+console.log(calculateLuxuryTax(100)); // 15
+
+// More complex example: logging with preset context
+function log(level, message) {
+  console.log(`[${level}] ${this.module}: ${message}`);
+}
+
+const logger = { module: "UserAuth" };
+const errorLog = log.bind(logger, "ERROR");
+const infoLog = log.bind(logger, "INFO");
+
+errorLog("Login failed"); // [ERROR] UserAuth: Login failed
+infoLog("User authenticated"); // [INFO] UserAuth: User authenticated
+```
+
+### Event Handler Context Binding
+
+```javascript
+class ButtonHandler {
+  constructor(name) {
+    this.name = name;
+    this.clickCount = 0;
+  }
+  
+  handleClick() {
+    this.clickCount++;
+    console.log(`${this.name} clicked ${this.clickCount} times`);
+  }
+  
+  attachToButton(buttonId) {
+    const button = document.getElementById(buttonId);
+    
+    // Without bind, 'this' would refer to the button element
+    button.addEventListener('click', this.handleClick.bind(this));
+  }
+}
+
+const handler = new ButtonHandler("Submit Button");
+handler.attachToButton("submit-btn");
+```
+
+## Flashcards:
+---
+
+What does `bind()` return and when does it execute?;; Returns a new bound function; executes only when the new function is called.
+
+How do `call()` and `apply()` differ in argument handling?;; `call()` takes arguments individually (arg1, arg2, arg3), `apply()` takes them as an array [arg1, arg2, arg3].
+
+When would you use `bind()` instead of `call()` or `apply()`?;; When you need a reusable function with a specific context, especially for callbacks or event handlers.
+
+What is method borrowing and which binding methods enable it?;; Using methods from one object with another object's data; enabled by `call()` and `apply()`.
+
+How can you pre-fill function arguments using binding methods?;; Use `bind()` with additional arguments: `fn.bind(context, arg1, arg2)` creates a function with those arguments already set.

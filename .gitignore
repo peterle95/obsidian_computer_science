@@ -1,0 +1,16 @@
+.obsidian/workspace.json
+.obsidian/cache/
+.obsidian/workspace-mobile.json
+
+.trash/
+
+.DS_Store
+Thumbs.db
+
+Assets/Templates/AI.md
+Assets/Images
+
+.obsidian/plugins/smart-connections/
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/data.json
+
